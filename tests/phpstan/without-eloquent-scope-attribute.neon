@@ -1,0 +1,23 @@
+includes:
+    - base.neon
+
+services:
+    -
+        class: Edalzell\DeadCodeDetector\EloquentTraitHooksUsageProvider
+        tags:
+            - shipmonk.deadCode.memberUsageProvider
+    -
+        class: Edalzell\DeadCodeDetector\LaravelActionsUsageProvider
+        tags:
+            - shipmonk.deadCode.memberUsageProvider
+    -
+        class: Edalzell\DeadCodeDetector\LaravelActionsRunUsageProvider
+        tags:
+            - shipmonk.deadCode.memberUsageProvider
+    -
+        class: Edalzell\DeadCodeDetector\ActionListenerUsageExcluder
+        tags:
+            - shipmonk.deadCode.memberUsageExcluder
+
+parameters:
+    tmpDir: %currentWorkingDirectory%/build/phpstan-fixtures/without-eloquent-scope-attribute
