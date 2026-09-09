@@ -1,8 +1,6 @@
-This package teaches [shipmonk/dead-code-detector](https://github.com/shipmonk-rnd/dead-code-detector) about three Laravel conventions its own providers miss: Eloquent trait hooks, `#[Scope]` attributes, and lorisleiva/laravel-actions.
+This package teaches [shipmonk/dead-code-detector](https://github.com/shipmonk-rnd/dead-code-detector) about two Eloquent conventions its own providers miss: trait hooks and `#[Scope]` attributes. [lorisleiva/laravel-actions](https://github.com/lorisleiva/laravel-actions) is covered by [edalzell/dead-code-detector-laravel-actions](https://github.com/edalzell/dead-code-detector-laravel-actions); the two packages are independent and neither requires the other. A package named for Laravel does not get to force an opinion about one third-party package on every Laravel user.
 
 It is a PHPStan extension, not a Laravel package. No service provider, no config to publish, no `extra.laravel`. `extension.neon` at the root registers every service with its shipmonk tag, and `extra.phpstan.includes` points `phpstan/extension-installer` at it.
-
-`lorisleiva/laravel-actions` is a `suggest`, not a `require`. The three Action extensions match trait names as strings and never name a class from that package, so they load harmlessly when it is absent. Keep it that way — importing a class from a suggested package puts a fatal error one `composer remove` away.
 
 # Development
 

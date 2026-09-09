@@ -1,6 +1,6 @@
 {
     "name": "edalzell/dead-code-detector-laravel",
-    "description": "PHPStan extensions teaching shipmonk/dead-code-detector about Eloquent trait hooks, #[Scope] attributes and lorisleiva/laravel-actions",
+    "description": "PHPStan extensions teaching shipmonk/dead-code-detector about Eloquent trait hooks and #[Scope] attributes",
     "license": "MIT",
     "keywords": [
         "Erin Dalzell",
@@ -25,11 +25,7 @@
     "require-dev": {
         "illuminate/database": "^11.0 || ^12.0 || ^13.0",
         "laravel/pint": "^1.14",
-        "lorisleiva/laravel-actions": "^2.12",
         "pestphp/pest": "^3.0 || ^4.0"
-    },
-    "suggest": {
-        "lorisleiva/laravel-actions": "Needed for LaravelActionsUsageProvider, LaravelActionsRunUsageProvider and ActionListenerUsageExcluder to match anything"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,

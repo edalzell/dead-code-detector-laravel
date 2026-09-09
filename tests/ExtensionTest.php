@@ -2,30 +2,16 @@
 
 use Edalzell\DeadCodeDetector\Tests\Analysis;
 
-it('reports only the uncalled Action when every extension is registered', function () {
-    expect(Analysis::deadMembers('all'))->toBe(['ArchivePark::handle']);
+it('reports nothing dead when every extension is registered', function () {
+    expect(Analysis::deadMembers('all'))->toBe([]);
 });
 
 it('reports Eloquent trait hooks without EloquentTraitHooksUsageProvider', function () {
     expect(Analysis::deadMembers('without-eloquent-trait-hooks'))
-        ->toBe(['ArchivePark::handle', 'HasSlug::bootHasSlug', 'HasSlug::initializeHasSlug']);
+        ->toBe(['HasSlug::bootHasSlug', 'HasSlug::initializeHasSlug']);
 });
 
 it('reports a #[Scope] method without EloquentScopeAttributeUsageProvider', function () {
     expect(Analysis::deadMembers('without-eloquent-scope-attribute'))
-        ->toBe(['ArchivePark::handle', 'Park::active']);
-});
-
-it('reports reflectively called Action hooks without LaravelActionsUsageProvider', function () {
-    expect(Analysis::deadMembers('without-laravel-actions'))
-        ->toBe(['ArchivePark::handle', 'UpdateProfile::authorize', 'UpdateProfile::rules']);
-});
-
-it('reports handle() of Actions called via run() without LaravelActionsRunUsageProvider', function () {
-    expect(Analysis::deadMembers('without-laravel-actions-run'))
-        ->toBe(['ArchivePark::handle', 'SendWelcome::handle', 'UpdateProfile::handle']);
-});
-
-it('hides the uncalled Action behind the listener heuristic without ActionListenerUsageExcluder', function () {
-    expect(Analysis::deadMembers('without-action-listener-excluder'))->toBe([]);
+        ->toBe(['Park::active']);
 });

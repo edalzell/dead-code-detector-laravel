@@ -3,9 +3,11 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/edalzell/dead-code-detector-laravel/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/edalzell/dead-code-detector-laravel/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/edalzell/dead-code-detector-laravel.svg?style=flat-square)](https://packagist.org/packages/edalzell/dead-code-detector-laravel)
 
-Four usage providers and one usage excluder for [shipmonk/dead-code-detector](https://github.com/shipmonk-rnd/dead-code-detector), covering Laravel conventions its own providers do not: Eloquent trait hooks, `#[Scope]` attributes, and [lorisleiva/laravel-actions](https://github.com/lorisleiva/laravel-actions).
+Two usage providers for [shipmonk/dead-code-detector](https://github.com/shipmonk-rnd/dead-code-detector), covering Laravel conventions its own providers do not: Eloquent trait hooks and `#[Scope]` attributes.
 
 This is a PHPStan extension, not a Laravel package. There is no service provider and nothing to publish.
+
+For [lorisleiva/laravel-actions](https://github.com/lorisleiva/laravel-actions), see [edalzell/dead-code-detector-laravel-actions](https://github.com/edalzell/dead-code-detector-laravel-actions).
 
 ## Installation
 
@@ -21,19 +23,11 @@ includes:
     - vendor/edalzell/dead-code-detector-laravel/extension.neon
 ```
 
-`lorisleiva/laravel-actions` is a suggestion, not a requirement. The three Action extensions match on trait names as strings and never reference a class from that package, so they load and do nothing when it is absent.
-
 ## What each extension does
 
 **`EloquentTraitHooksUsageProvider`** — Eloquent invokes a trait's `boot{Trait}` and `initialize{Trait}` hooks reflectively. Shipmonk's Eloquent provider knows only `Model::boot` and `Model::booted`, so every hook a trait declares reads as dead.
 
 **`EloquentScopeAttributeUsageProvider`** — a `#[Scope]` method is reached through the query builder, never called by name. Shipmonk's Eloquent provider recognises the older `scopeName()` convention only, so an attribute-declared scope reads as dead however many callers it has.
-
-**`LaravelActionsUsageProvider`** — laravel-actions resolves a set of methods by name through its decorators: the four entrypoint adapters, and the validation and response hooks. Nothing calls them, so all of them read as dead. The list is literal rather than a prefix match, so a typo in an Action still fails loudly, and it is scoped to classes actually using one of the package's traits, so a `rules()` on an unrelated class is still reported.
-
-**`LaravelActionsRunUsageProvider`** — `Foo::run()` reaches `Foo::handle()` through `AsObject`'s trait body, which lives in vendor and is never analysed, so the detector never sees the call. Every Action used to pass anyway, by accident: shipmonk's Laravel provider marks any public `handle*` whose first parameter is class-typed as an auto-discovered listener, which every Action taking a model happened to satisfy. One with a scalar first parameter read as dead however many callers it had. This records the call the trait hides, for `run`, `runIf` and `runUnless`.
-
-**`ActionListenerUsageExcluder`** — the flip side of that heuristic. Because it marks any class-typed-first-parameter `handle` as a listener, a genuinely dead Action taking a model was invisible: one shipped with no caller for a whole phase and nothing reported it. This subtracts that one invented usage — matched by the note shipmonk attaches to it, so real calls are untouched — for classes using `AsObject` but not `AsListener`. An Action that really is a listener keeps the heuristic, and so does the constructor, which laravel-actions resolves through the container either way.
 
 ## Testing
 
@@ -41,7 +35,7 @@ includes:
 composer test
 ```
 
-The suite runs PHPStan over `tests/Fixtures` six times: once with the shipped `extension.neon`, and once per extension with that one service left out. Each run asserts the exact set of members reported dead, so removing any extension turns a test red with a named fixture rather than quietly changing nothing.
+The suite runs PHPStan over `tests/Fixtures` three times: once with the shipped `extension.neon`, and once per extension with that one service left out. Each run asserts the exact set of members reported dead, so removing any extension turns a test red with a named fixture rather than quietly changing nothing.
 
 ## Changelog
 
